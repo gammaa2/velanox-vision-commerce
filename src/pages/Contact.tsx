@@ -20,19 +20,38 @@ export default function Contact() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.from("contact_messages").insert({
-      name: formData.name,
-      email: formData.email,
-      message: formData.message,
-    });
+    try {
+      // Save to database
+      const { error: dbError } = await supabase.from("contact_messages").insert({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
 
-    if (error) {
-      toast.error("Failed to send message");
-    } else {
+      if (dbError) throw dbError;
+
+      // Send email notifications
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        },
+      });
+
+      if (emailError) {
+        console.error('Email notification error:', emailError);
+        // Don't fail the whole operation if email fails
+      }
+
       toast.success("Message sent! We'll get back to you soon.");
       setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
