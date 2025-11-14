@@ -8,18 +8,37 @@ import { User as SupabaseUser } from "@supabase/supabase-js";
 export const Navbar = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [cartCount, setCartCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdmin(session.user.id);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdmin(session.user.id);
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const checkAdmin = async (userId: string) => {
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    setIsAdmin(!!data);
+  };
 
   useEffect(() => {
     if (user) {
@@ -52,6 +71,11 @@ export const Navbar = () => {
             <Link to="/contact" className="text-sm font-medium transition-smooth hover:text-primary">
               Contact
             </Link>
+            {isAdmin && (
+              <Link to="/admin" className="text-sm font-medium transition-smooth hover:text-primary text-accent">
+                Admin
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-4">
