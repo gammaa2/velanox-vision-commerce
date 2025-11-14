@@ -268,7 +268,7 @@ Deno.serve(async (req) => {
       JSON.stringify({ message: 'Successfully seeded 20 products', count: 20 }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in seed-products function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),

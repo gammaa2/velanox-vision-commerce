@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { ProductCard } from "@/components/ProductCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Product {
   id: string;
@@ -76,25 +77,41 @@ export default function Shop() {
   };
 
   if (loading) {
-    return <div className="container mx-auto px-4 py-20 text-center">Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="h-12 w-64 mb-8" />
+        <div className="flex gap-8">
+          <div className="w-64 space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-32 w-full" />
+          </div>
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-96 w-full" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Shop All Products</h1>
+      <h1 className="text-5xl font-bold mb-2">Shop Collection</h1>
+      <p className="text-xl text-muted-foreground mb-12">Discover your unique style</p>
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* Filters Sidebar */}
-        <div className="w-full md:w-64 space-y-6">
+        <div className="w-full md:w-64 space-y-8">
           <div>
-            <h3 className="font-semibold mb-3">Category</h3>
+            <h3 className="font-bold text-lg mb-4">Category</h3>
             <div className="space-y-2">
               <Button
                 variant={!searchParams.get("category") ? "default" : "outline"}
                 className="w-full justify-start"
                 onClick={() => setCategory("all")}
               >
-                All
+                All Products
               </Button>
               <Button
                 variant={searchParams.get("category") === "men" ? "default" : "outline"}
@@ -121,67 +138,55 @@ export default function Shop() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Price Range</h3>
+            <h3 className="font-bold text-lg mb-4">Price Range</h3>
             <Slider
               value={priceRange}
               onValueChange={setPriceRange}
               max={3000}
               step={100}
-              className="mb-2"
+              className="mb-4"
             />
-            <div className="text-sm text-muted-foreground">
-              ₹{priceRange[0]} - ₹{priceRange[1]}
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>₹{priceRange[0]}</span>
+              <span>₹{priceRange[1]}</span>
             </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mb-3">Sort By</h3>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
         {/* Products Grid */}
         <div className="flex-1">
+          <div className="flex justify-between items-center mb-8">
+            <p className="text-lg font-semibold">
+              {filteredProducts.length} {filteredProducts.length === 1 ? 'Product' : 'Products'}
+            </p>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="price-low">Price: Low to High</SelectItem>
+                <SelectItem value="price-high">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {filteredProducts.length === 0 ? (
-            <div className="text-center py-20 text-muted-foreground">
-              No products found matching your filters.
+            <div className="text-center py-32">
+              <h3 className="text-2xl font-semibold mb-2">No products found</h3>
+              <p className="text-muted-foreground">Try adjusting your filters</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProducts.map((product) => (
-                <Link key={product.id} to={`/product/${product.id}`}>
-                  <Card className="overflow-hidden hover:shadow-hover transition-smooth group">
-                    <div className="aspect-square overflow-hidden bg-muted">
-                      {product.images[0] ? (
-                        <img
-                          src={product.images[0]}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-muted-foreground">No Image</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold mb-1">{product.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-2 capitalize">
-                        {product.category}
-                      </p>
-                      <p className="font-bold">₹{product.price.toFixed(2)}</p>
-                    </div>
-                  </Card>
-                </Link>
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  image={product.images[0]}
+                  category={product.category}
+                />
               ))}
             </div>
           )}
