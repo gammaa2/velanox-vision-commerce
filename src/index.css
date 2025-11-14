@@ -24,6 +24,7 @@ All colors MUST be HSL.
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 217 91% 50%;
+    --primary-glow: 217 91% 70%;
 
     /* Secondary - Deep Black */
     --secondary: 0 0% 10%;
@@ -51,10 +52,16 @@ All colors MUST be HSL.
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     /* Shadows */
     --shadow-elegant: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
     --shadow-hover: 0 8px 30px -4px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 40px rgba(66, 153, 225, 0.3);
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 10%), hsl(0 0% 4%));
   }
 
   .dark {
@@ -109,11 +116,35 @@ All colors MUST be HSL.
     transition: var(--transition-smooth);
   }
 
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
   .shadow-elegant {
     box-shadow: var(--shadow-elegant);
   }
 
   .shadow-hover {
     box-shadow: var(--shadow-hover);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-dark {
+    background: var(--gradient-dark);
+  }
+
+  .hover-lift {
+    @apply transition-smooth hover:-translate-y-1 hover:shadow-hover;
+  }
+
+  .hover-scale {
+    @apply transition-smooth hover:scale-105;
   }
 }

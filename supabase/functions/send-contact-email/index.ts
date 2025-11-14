@@ -7,11 +7,6 @@ const corsHeaders = {
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
 interface ContactEmailRequest {
   name: string;
   email: string;
@@ -94,6 +89,4 @@ Deno.serve(async (req: Request): Promise<Response> => {
       }
     );
   }
-});
-
 });

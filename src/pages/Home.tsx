@@ -23,30 +23,35 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[600px] md:h-[700px] overflow-hidden">
+      <section className="relative h-[600px] md:h-[800px] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroBanner})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/40" />
         </div>
         <div className="relative container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-2xl space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
-              Style Reimagined
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground">
-              Discover the Future of Fashion
-            </p>
+          <div className="max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="space-y-4">
+              <p className="text-lg text-primary font-semibold uppercase tracking-wider">
+                New Collection 2024
+              </p>
+              <h1 className="text-6xl md:text-8xl font-bold tracking-tight leading-none">
+                Style<br />Reimagined
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-xl">
+                We build confidence through clothing — Discover premium fashion that defines you
+              </p>
+            </div>
             <div className="flex gap-4">
               <Link to="/shop">
-                <Button size="lg" className="group">
+                <Button size="lg" className="group text-lg px-8 py-6 shadow-glow">
                   Shop Now
-                  <ArrowRight className="ml-2 h-4 w-4 transition-smooth group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-smooth group-hover:translate-x-1" />
                 </Button>
               </Link>
               <Link to="/about">
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="text-lg px-8 py-6">
                   Learn More
                 </Button>
               </Link>
@@ -56,28 +61,28 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20 bg-secondary/5">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="p-6 text-center hover:shadow-hover transition-smooth">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h3 className="font-semibold mb-2">Sustainable</h3>
-              <p className="text-sm text-muted-foreground">
-                Eco-friendly materials and ethical production
+            <Card className="p-8 text-center hover-lift border-0 shadow-elegant bg-card">
+              <Shield className="h-14 w-14 mx-auto mb-6 text-primary" />
+              <h3 className="font-bold text-xl mb-3">Sustainable</h3>
+              <p className="text-muted-foreground">
+                Eco-friendly materials and ethical production practices
               </p>
             </Card>
-            <Card className="p-6 text-center hover:shadow-hover transition-smooth">
-              <Award className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h3 className="font-semibold mb-2">Luxury Fabric</h3>
-              <p className="text-sm text-muted-foreground">
-                Premium quality materials for ultimate comfort
+            <Card className="p-8 text-center hover-lift border-0 shadow-elegant bg-card">
+              <Award className="h-14 w-14 mx-auto mb-6 text-primary" />
+              <h3 className="font-bold text-xl mb-3">Luxury Fabric</h3>
+              <p className="text-muted-foreground">
+                Premium quality materials for ultimate comfort and style
               </p>
             </Card>
-            <Card className="p-6 text-center hover:shadow-hover transition-smooth">
-              <Truck className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h3 className="font-semibold mb-2">Fast Shipping</h3>
-              <p className="text-sm text-muted-foreground">
-                Free delivery on orders over ₹999
+            <Card className="p-8 text-center hover-lift border-0 shadow-elegant bg-card">
+              <Truck className="h-14 w-14 mx-auto mb-6 text-primary" />
+              <h3 className="font-bold text-xl mb-3">Fast Shipping</h3>
+              <p className="text-muted-foreground">
+                Free express delivery on all orders over ₹999
               </p>
             </Card>
           </div>
