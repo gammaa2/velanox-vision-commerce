@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { ProductCard } from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import SearchBar from "@/components/SearchBar";
 
 interface Product {
   id: string;
@@ -22,6 +23,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [sortBy, setSortBy] = useState("newest");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -29,7 +31,7 @@ export default function Shop() {
 
   useEffect(() => {
     filterAndSortProducts();
-  }, [products, searchParams, priceRange, sortBy]);
+  }, [products, searchParams, priceRange, sortBy, searchQuery]);
 
   const fetchProducts = async () => {
     const { data, error } = await supabase
@@ -50,6 +52,13 @@ export default function Shop() {
     const category = searchParams.get("category");
     if (category) {
       filtered = filtered.filter((p) => p.category === category);
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter((p) => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
 
     // Filter by price
@@ -155,6 +164,9 @@ export default function Shop() {
 
         {/* Products Grid */}
         <div className="flex-1">
+          <div className="mb-6">
+            <SearchBar onSearch={setSearchQuery} placeholder="Search products..." />
+          </div>
           <div className="flex justify-between items-center mb-8">
             <p className="text-lg font-semibold">
               {filteredProducts.length} {filteredProducts.length === 1 ? 'Product' : 'Products'}
